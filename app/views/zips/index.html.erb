@@ -2,6 +2,7 @@
 	<p id="notice"><%= notice %></p>
 
 	<h1>Listing Zips</h1>
+	<%= link_to 'New Zip', new_zip_path  %> <br>
 	<div class="table-responsive">
 	 <table class="table table-hover">
 	  <thead class="thead-inverse">
@@ -32,9 +33,7 @@
 </div>
 
 	<br>
-	<div class="col-md-12">
-	  <ul class="pagination pagination-lg"><%= will_paginate @zips %></ul>
-	</div>
-	<%= link_to 'New Zip', new_zip_path  %>
-
+	<div class="digg_pagination">
+    <%= will_paginate @zips, :container => false %>
+  </div>
 </div>
