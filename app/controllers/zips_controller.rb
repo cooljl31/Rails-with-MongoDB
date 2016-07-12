@@ -4,7 +4,10 @@ class ZipsController < ApplicationController
   # GET /zips
   # GET /zips.json
   def index
-    @zips = Zip.all
+    # @zips = Zip.all
+    args=params.clone                      #update a clone of params
+    args[:sort]=get_sort_hash(args[:sort]) #replace sort with hash
+    @zips = Zip.paginate(args)
   end
 
   # GET /zips/1
@@ -62,6 +65,7 @@ class ZipsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_zip
       @zip = Zip.find(params[:id])
@@ -70,5 +74,19 @@ class ZipsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def zip_params
       params.require(:zip).permit(:id, :city, :state, :population)
+    end
+    #create a hash sort spec from query param
+    #sort=state:1,city,population:-1
+    #{state:1, city:1, population:-1}
+    def get_sort_hash(sort)
+      order={}
+      if (!sort.nil?)
+        sort.split(",").each do |term|
+          args=term.split(":")
+          dir = args.length<2 || args[1].to_i >= 0 ? 1 : -1
+          order[args[0]] = dir
+        end
+      end
+      return order
     end
 end
